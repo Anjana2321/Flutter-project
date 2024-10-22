@@ -1,0 +1,209 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class CalenderForm extends StatefulWidget {
+  @override
+  _CalenderFormState createState() => _CalenderFormState();
+}
+
+class _CalenderFormState extends State<CalenderForm> {
+  // Controllers
+  TextEditingController nameController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  // Sample lists for dropdowns
+  List<String> leaveTypes = ["Sick Leave", "Casual Leave", "Annual Leave"];
+  List<String> genders = ["Male", "Female", "Other"];
+  List<String> subjects = ["Math", "Science", "English", "History"]; // In-built listview data
+
+  String? selectedLeaveType;
+  String? selectedGender;
+
+  // Function to select date
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+      setState(() {
+        controller.text = formattedDate;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset('assets/logo.png', height: 40), // School logo
+            SizedBox(width: 10),
+            Text('KRP', style: TextStyle(color: Colors.black)),
+          ],
+        ),
+        actions: [
+          Icon(Icons.notifications, color: Colors.black),
+          SizedBox(width: 15),
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/profile.jpg'), // Profile image
+          ),
+          SizedBox(width: 10),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            Text(
+              "Calender Form",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            _buildLabel('Name:'),
+            _buildTextField(nameController, 'Enter Title'),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Start Date:'),
+            _buildDateField(startDateController, context),
+
+            SizedBox(height: 20),
+
+            _buildLabel('End Date:'),
+            _buildDateField(endDateController, context),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Description:'),
+            _buildTextField(descriptionController, 'Enter Description'),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Leave Type:'),
+            _buildDropdown(leaveTypes, selectedLeaveType, (String? newValue) {
+              setState(() {
+                selectedLeaveType = newValue;
+              });
+            }),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Gender:'),
+            _buildDropdown(genders, selectedGender, (String? newValue) {
+              setState(() {
+                selectedGender = newValue;
+              });
+            }),
+
+            SizedBox(height: 40),
+
+            _buildSubmitButton(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Users',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.refresh),
+            label: 'Refresh',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build labels
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.blue[900],
+      ),
+    );
+  }
+
+  // Helper method to build text fields
+  Widget _buildTextField(TextEditingController controller, String hint) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hint,
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  // Helper method to build date field with calendar icon
+  Widget _buildDateField(TextEditingController controller, BuildContext context) {
+    return TextField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        hintText: "dd-mm-yyyy",
+        suffixIcon: IconButton(
+          icon: Icon(Icons.calendar_today, color: Colors.purple),
+          onPressed: () {
+            _selectDate(context, controller);
+          },
+        ),
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  // Helper method to build dropdowns
+  Widget _buildDropdown(List<String> items, String? selectedItem, ValueChanged<String?> onChanged) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+      ),
+      value: selectedItem,
+      hint: Text("Choose"),
+      onChanged: onChanged,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  // Helper method to build submit button
+  Widget _buildSubmitButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+        ),
+        onPressed: () {
+          // Add your submission logic here
+        },
+        child: Text('Submit', style: TextStyle(fontSize: 16)),
+      ),
+    );
+  }
+}
+
