@@ -1,0 +1,201 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // For formatting the date
+import 'package:flutter/services.dart';
+
+class FeeRegistration extends StatefulWidget {
+  @override
+  _FeeRegistrationState createState() => _FeeRegistrationState();
+}
+
+class _FeeRegistrationState extends State<FeeRegistration> {
+  // Controllers
+  TextEditingController amountController = TextEditingController();
+  TextEditingController lastDateController = TextEditingController();
+
+  // List of subjects
+  List<String> subjects = ["Math", "Science", "English", "History"];
+
+  // Selected values
+  String? selectedFeeCategory;
+  String? selectedClass;
+
+  // List for fee categories
+  List<String> feeCategories = ["Tuition Fee", "Cultural Fee", "Exam Fee"];
+
+  // Function to open date picker
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      setState(() {
+        lastDateController.text = formattedDate;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset('assets/logo.png', height: 40), // School logo
+            SizedBox(width: 10),
+            Text('KRP', style: TextStyle(color: Colors.black)),
+          ],
+        ),
+        actions: [
+          Icon(Icons.notifications, color: Colors.black),
+          SizedBox(width: 15),
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/profile.jpg'), // Profile image
+          ),
+          SizedBox(width: 10),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            _buildLabel('Fees Types'),
+            _buildSubjectDropdown(),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Fee Category:'),
+            _buildDropdown(feeCategories, selectedFeeCategory, (String? newValue) {
+              setState(() {
+                selectedFeeCategory = newValue;
+              });
+            }),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Amount:'),
+            _buildTextField(amountController, 'Enter Amount'),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Class:'),
+            _buildDropdown(subjects, selectedClass, (String? newValue) {
+              setState(() {
+                selectedClass = newValue;
+              });
+            }),
+
+            SizedBox(height: 20),
+
+            _buildLabel('Last Date:'),
+            _buildDateField(lastDateController, context),
+
+            SizedBox(height: 40),
+
+            _buildSubmitButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.blue[900],
+      ),
+    );
+  }
+
+  Widget _buildDropdown(List<String> items, String? selectedItem, ValueChanged<String?> onChanged) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+      ),
+      value: selectedItem,
+      hint: Text("Select"),
+      onChanged: onChanged,
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSubjectDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+      ),
+      value: selectedClass,
+      hint: Text("Subject"),
+      onChanged: (String? newValue) {
+        setState(() {
+          selectedClass = newValue;
+        });
+      },
+      items: subjects.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hint) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        hintText: hint,
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget _buildDateField(TextEditingController controller, BuildContext context) {
+    return TextField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        hintText: "Select Date",
+        suffixIcon: IconButton(
+          icon: Icon(Icons.calendar_today, color: Colors.purple),
+          onPressed: () {
+            _selectDate(context);
+          },
+        ),
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green[400],
+        ),
+        onPressed: () {
+          // Add your submission logic here
+        },
+        child: Text('SUBMIT', style: TextStyle(fontSize: 16)),
+      ),
+    );
+  }
+}
