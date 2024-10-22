@@ -1,0 +1,107 @@
+import 'package:flutter/material.dart';
+//import 'package:schoolportal/stdattendance.dart';
+
+
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // Controllers for the input fields
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo (can be an image from assets)
+              Image.asset(
+                'assets/logo.png', // Add your logo image here
+                height: 120.0,
+              ),
+              SizedBox(height: 20.0),
+              // School Name and subtitle
+              Text(
+                'KRP Matriculation',
+                style: TextStyle(
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                'Higher Secondary School',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black54,
+                ),
+              ),
+              SizedBox(height: 30.0),
+              // Username field
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Username',
+                ),
+              ),
+              SizedBox(height: 20.0),
+              // Password field
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                ),
+              ),
+              SizedBox(height: 20.0),
+              // Sign In button
+              ElevatedButton(
+                onPressed: () {
+                  // Handle login logic here
+                 // Navigator.push(
+                   // context,
+                  //  MaterialPageRoute(builder: (context) => StdAttendance()),
+                 // );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green, // Button color
+                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                ),
+                child: Text('Sign In'),
+              ),
+              SizedBox(height: 15.0),
+              // Forgot password link
+              TextButton(
+                onPressed: () {
+                  // Navigate to forgot password screen
+                },
+                child: Text('Forgot password?'),
+              ),
+              SizedBox(height: 10.0),
+              // Register link
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+}
