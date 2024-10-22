@@ -1,0 +1,180 @@
+import 'package:flutter/material.dart';
+
+// Model for Event Data
+class EventData {
+  final String date;
+  final String eventTitle;
+  final String description;
+
+  EventData({
+    required this.date,
+    required this.eventTitle,
+    required this.description,
+  });
+}
+
+class EventsPage extends StatelessWidget {
+  // Inbuilt list of event data
+  final List<EventData> eventList = [
+    EventData(
+      date: '24 June 2024',
+      eventTitle: 'EVENT',
+      description: 'Cultural events to be held on June',
+    ),
+    EventData(
+      date: '24 June 2024',
+      eventTitle: 'EVENT',
+      description: 'Sport events to be held on July',
+    ),
+    EventData(
+      date: '24 June 2024',
+      eventTitle: 'EVENT',
+      description: 'Sport events to be held on July',
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/logo.png', // Replace with your logo asset path
+              height: 40,
+            ),
+            SizedBox(width: 8),
+            Text(
+              'KRP',
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications, color: Colors.black),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  'https://example.com/student.png'), // Replace with your image URL
+            ),
+            onPressed: () {},
+          ),
+        ],
+        automaticallyImplyLeading: false,
+      ),
+      body: Column(
+        children: [
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: eventList.length,
+              itemBuilder: (context, index) {
+                final event = eventList[index];
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Timeline marker
+                    Column(
+                      children: [
+                        if (index == 0)
+                          Container(
+                            height: 30.0,
+                            width: 2.0,
+                            color: Colors.green,
+                          ),
+                        Icon(Icons.circle, size: 10.0, color: Colors.green),
+                        if (index != eventList.length - 1)
+                          Container(
+                            height: 100.0,
+                            width: 2.0,
+                            color: Colors.green,
+                          ),
+                      ],
+                    ),
+                    SizedBox(width: 16.0),
+                    // Event card
+                    Expanded(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                event.date,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal,
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green[200],
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 16.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      event.eventTitle,
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      event.description,
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
